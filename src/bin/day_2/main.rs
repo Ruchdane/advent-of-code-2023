@@ -21,10 +21,36 @@ impl Bag {
     }
 }
 fn bag_from_reveal(reveal: &str) -> Bag {
-    todo!()
+    let mut bag = Bag::empty();
+    if reveal.is_empty() {
+        return bag;
+    }
+    reveal.split(',').into_iter().for_each(|cube_count| {
+        let split: Vec<&str> = cube_count.trim_start().split(' ').collect();
+        println!("{:?}", split);
+        let count: u32 = split[0].parse().unwrap();
+        let color = split[1];
+        match color {
+            "green" => bag.green = count,
+            "red" => bag.red = count,
+            "blue" => bag.blue = count,
+            _ => panic!("Unknown color"),
+        };
+    });
+    bag
 }
 fn minimum_bag_for_game(game: &str) -> Bag {
-    todo!()
+    let mut bag = Bag::empty();
+    if game.is_empty() {
+        return bag;
+    }
+    game.split(';').into_iter().for_each(|reveal| {
+        let reveal_bag = bag_from_reveal(reveal);
+        bag.blue = std::cmp::max(bag.blue, reveal_bag.blue);
+        bag.red = std::cmp::max(bag.red, reveal_bag.red);
+        bag.green = std::cmp::max(bag.green, reveal_bag.green);
+    });
+    bag
 }
 
 fn games_possible_for_bag(games: &str, bag: Bag) {
