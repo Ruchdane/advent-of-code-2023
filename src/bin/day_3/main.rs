@@ -32,7 +32,17 @@ impl Domain {
         unimplemented!()
     }
     fn from_number(origin: usize, value: u32) -> Self {
-        unimplemented!()
+        let origin = {
+            if origin == 0 {
+                0
+            } else {
+                origin - 1
+            }
+        };
+        return Self {
+            origin,
+            length: value.to_string().len() + 2,
+        };
     }
 }
 
