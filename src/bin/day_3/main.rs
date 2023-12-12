@@ -28,8 +28,8 @@ impl Domain {
         Self { origin, length }
     }
 
-    pub fn include(self: &Self, puzzle_part_origin: usize) -> bool {
-        unimplemented!()
+    pub fn include(self: &Self, symbol_origin: usize) -> bool {
+        self.origin <= symbol_origin && symbol_origin <= self.origin + self.length
     }
     fn from_number(origin: usize, value: u32) -> Self {
         if origin == 0 {
@@ -143,6 +143,6 @@ mod test {
         // *******$*******************
         let symbol = 7;
         let domain = Domain::new(9, 6);
-        assert!(domain.include(symbol))
+        assert!(!domain.include(symbol))
     }
 }
