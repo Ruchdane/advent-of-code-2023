@@ -11,6 +11,7 @@ struct Domain {
     origin: usize,
     length: usize,
 }
+#[derive(PartialEq, Debug)]
 enum PuzzlePart {
     Number(usize, u32),
     Symbol(usize),
@@ -56,7 +57,7 @@ fn filter_adjacent_number(
 
 #[cfg(test)]
 mod test {
-    use crate::Domain;
+    use crate::{Domain, PuzzleLine, PuzzlePart};
 
     #[test]
     fn can_convert_number_at_the_begining() {
@@ -144,5 +145,38 @@ mod test {
         let symbol = 7;
         let domain = Domain::new(9, 6);
         assert!(!domain.include(symbol))
+    }
+    #[test]
+    fn can_parse_empty_line() {
+        let line = "";
+        let expected = PuzzleLine::new();
+        let result = PuzzlePart::parse_line(line);
+        assert_eq!(result, expected);
+    }
+    #[test]
+    fn can_parse_line_with_number() {
+        let line = "..124..";
+        let expected = vec![PuzzlePart::Number(2, 124)];
+        let result = PuzzlePart::parse_line(line);
+        assert_eq!(result, expected);
+    }
+    #[test]
+    fn can_parse_line_with_symbol() {
+        let line = "...$..";
+        let expected = vec![PuzzlePart::Symbol(4)];
+        let result = PuzzlePart::parse_line(line);
+        assert_eq!(result, expected);
+    }
+    #[test]
+    fn can_parse_line_with_numbers_symbol() {
+        let line = "..25.$..30.~";
+        let expected = vec![
+            PuzzlePart::Number(2, 25),
+            PuzzlePart::Symbol(5),
+            PuzzlePart::Number(8, 30),
+            PuzzlePart::Symbol(11),
+        ];
+        let result = PuzzlePart::parse_line(line);
+        assert_eq!(result, expected);
     }
 }
