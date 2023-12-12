@@ -32,17 +32,17 @@ impl Domain {
         unimplemented!()
     }
     fn from_number(origin: usize, value: u32) -> Self {
-        let origin = {
-            if origin == 0 {
-                0
-            } else {
-                origin - 1
+        if origin == 0 {
+            Self {
+                origin: 0,
+                length: value.to_string().len() + 1,
             }
-        };
-        return Self {
-            origin,
-            length: value.to_string().len() + 2,
-        };
+        } else {
+            Self {
+                origin: origin - 1,
+                length: value.to_string().len() + 2,
+            }
+        }
     }
 }
 
@@ -62,7 +62,7 @@ mod test {
     fn can_convert_number_at_the_begining() {
         let origin = 0;
         let value = 120;
-        let expected = Domain::new(0, 5);
+        let expected = Domain::new(0, 4);
         let result = Domain::from_number(origin, value);
         assert_eq!(result, expected)
     }
@@ -79,6 +79,7 @@ mod test {
         let origin = 0;
         let value = 1;
         let expected = Domain::new(0, 3);
+        let expected = Domain::new(0, 2);
         let result = Domain::from_number(origin, value);
         assert_eq!(result, expected)
     }
