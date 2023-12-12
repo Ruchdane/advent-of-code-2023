@@ -52,7 +52,7 @@ mod test {
     fn can_convert_number_at_the_begining() {
         let origin = 0;
         let value = 120;
-        let expected = Domain::new(0, 122);
+        let expected = Domain::new(0, 5);
         let result = Domain::from_number(origin, value);
         assert_eq!(result, expected)
     }
@@ -60,7 +60,23 @@ mod test {
     fn can_convert_number_in_the_middle() {
         let origin = 10;
         let value = 120;
-        let expected = Domain::new(9, 122);
+        let expected = Domain::new(9, 5);
+        let result = Domain::from_number(origin, value);
+        assert_eq!(result, expected)
+    }
+    #[test]
+    fn can_convert_number_with_length_of_one() {
+        let origin = 0;
+        let value = 1;
+        let expected = Domain::new(0, 3);
+        let result = Domain::from_number(origin, value);
+        assert_eq!(result, expected)
+    }
+    #[test]
+    fn can_convert_number_with_length_of_many() {
+        let origin = 10;
+        let value = 1205;
+        let expected = Domain::new(9, 6);
         let result = Domain::from_number(origin, value);
         assert_eq!(result, expected)
     }
