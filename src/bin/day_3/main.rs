@@ -28,7 +28,7 @@ impl Domain {
         Self { origin, length }
     }
 
-    fn is_in_Domain(puzzle_part_origin: usize) -> bool {
+    pub fn include(self: &Self, puzzle_part_origin: usize) -> bool {
         unimplemented!()
     }
     fn from_number(origin: usize, value: u32) -> Self {
@@ -78,7 +78,6 @@ mod test {
     fn can_convert_number_with_length_of_one() {
         let origin = 0;
         let value = 1;
-        let expected = Domain::new(0, 3);
         let expected = Domain::new(0, 2);
         let result = Domain::from_number(origin, value);
         assert_eq!(result, expected)
@@ -90,5 +89,60 @@ mod test {
         let expected = Domain::new(9, 6);
         let result = Domain::from_number(origin, value);
         assert_eq!(result, expected)
+    }
+
+    #[test]
+    fn can_detect_symbol_on_the_right_with_number_at_the_begining() {
+        // ****$************
+        // 1205$************
+        // ****$************
+        let symbol = 4;
+        let domain = Domain::new(0, 5);
+        assert!(domain.include(symbol))
+    }
+    #[test]
+    fn can_detect_symbol_in_between_with_number_at_the_begining() {
+        // **$*************
+        // 1205************
+        // **$*************
+        let symbol = 2;
+        let domain = Domain::new(0, 5);
+        assert!(domain.include(symbol))
+    }
+    #[test]
+    fn can_detect_symbol_on_the_right() {
+        // **************$************
+        // **********1205$************
+        // **************$************
+        let symbol = 14;
+        let domain = Domain::new(9, 6);
+        assert!(domain.include(symbol))
+    }
+    #[test]
+    fn can_detect_symbol_on_the_left() {
+        // **********$****************
+        // **********$1205************
+        // **********$****************
+        let symbol = 10;
+        let domain = Domain::new(9, 6);
+        assert!(domain.include(symbol))
+    }
+    #[test]
+    fn can_detect_symbol_on_the_between() {
+        // *************$*************
+        // ***********1205************
+        // *************$*************
+        let symbol = 12;
+        let domain = Domain::new(9, 6);
+        assert!(domain.include(symbol))
+    }
+    #[test]
+    fn can_not_detect_symbol_outside_of_domain() {
+        // *******$*******************
+        // *******$***1205************
+        // *******$*******************
+        let symbol = 7;
+        let domain = Domain::new(9, 6);
+        assert!(domain.include(symbol))
     }
 }
