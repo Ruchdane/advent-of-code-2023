@@ -21,7 +21,44 @@ type PuzzleLine = Vec<PuzzlePart>;
 
 impl PuzzlePart {
     fn parse_line(line: &str) -> PuzzleLine {
-        unimplemented!()
+        let mut result = vec![];
+        let mut is_parsing_number = false;
+        let mut parsed_number_origin: usize = 0;
+        let mut index = 0;
+        let mut number_string = String::new();
+        if line.is_empty() {
+            return result;
+        }
+        line.chars().for_each(|c| {
+            match c {
+                '.' => {
+                    if is_parsing_number {
+                        result.push(PuzzlePart::Number(
+                            parsed_number_origin,
+                            number_string.parse().unwrap(),
+                        ));
+                        number_string = String::new();
+                        is_parsing_number = false;
+                    }
+                }
+                digit if digit.is_digit(10) => {
+                    if !is_parsing_number {
+                        parsed_number_origin = index;
+                        is_parsing_number = true;
+                    };
+                    number_string.push(digit);
+                }
+                _ => result.push(PuzzlePart::Symbol(index)),
+            }
+            index += 1;
+        });
+        if is_parsing_number {
+            result.push(PuzzlePart::Number(
+                parsed_number_origin,
+                number_string.parse().unwrap(),
+            ));
+        }
+        result
     }
 }
 impl Domain {
@@ -163,7 +200,7 @@ mod test {
     #[test]
     fn can_parse_line_with_symbol() {
         let line = "...$..";
-        let expected = vec![PuzzlePart::Symbol(4)];
+        let expected = vec![PuzzlePart::Symbol(3)];
         let result = PuzzlePart::parse_line(line);
         assert_eq!(result, expected);
     }
